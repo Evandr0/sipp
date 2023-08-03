@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!-- 
+  @jgilsonsi
+
+  Line command: sudo sipp 192.168.9.206:5060 -i 192.168.9.199 -sf pcap.xml -inf call.csv -m 10000 -l 100 -r 1 -rp 10 	
+-->
+
+<scenario name="UAC with media">
+
+  <send retrans="500">
+    <![CDATA[
+
+      INVITE sip:[field3]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[field0]@[field1]:[local_port]>;tag=[call_number]
+      To: <sip:[field3]@[remote_ip]:[remote_port]>
+      Call-ID: [call_id]
+      CSeq: 1 INVITE
+      Contact: sip:[field0]@[field1]:[local_port]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Type: application/sdp
+      Content-Length: [len]
+
+      v=0
+      o=user1 53655765 2353687637 IN IP[local_ip_type] [local_ip]
+      s=-
+      c=IN IP[media_ip_type] [media_ip]
+      t=0 0
+      m=audio [media_port] RTP/AVP 18 101
+      a=rtpmap:18 G729/8000
+      a=rtpmap:101 telephone-event/8000
+      a=fmtp:101 0-11,16
+
+    ]]>
+  </send>
+
+  <recv response="100" optional="true"></recv>
+  <recv response="401" auth="true"></recv>
+  
+  <send>
+    <![CDATA[
+
+      ACK sip:[field3]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[field0]@[field1]:[local_port]>;tag=[call_number]
+      To: <sip:[field3]@[remote_ip]:[remote_port]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 1 ACK
+      Contact: sip:[field0]@[field1]:[local_port]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <send retrans="500">
+    <![CDATA[
+
+      INVITE sip:[field3]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[field0]@[field1]:[local_port]>;tag=[call_number]
+      To: <sip:[field3]@[remote_ip]:[remote_port]>
+      Call-ID: [call_id]
+      CSeq: 2 INVITE
+      Contact: sip:[field0]@[field1]:[local_port]
+      [field2]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Type: application/sdp
+      Content-Length: [len]
+
+      v=0
+      o=user1 53655765 2353687637 IN IP[local_ip_type] [local_ip]
+      s=-
+      c=IN IP[media_ip_type] [media_ip]
+      t=0 0
+      m=audio [media_port] RTP/AVP 18 101
+      a=rtpmap:18 G729/8000
+      a=rtpmap:101 telephone-event/8000
+      a=fmtp:101 0-11,16
+
+    ]]>
+  </send>
+
+  <recv response="100" optional="true"></recv>
+  <recv response="180" optional="true"></recv>
+  <recv response="183" optional="true"></recv>
+  <recv response="200" rtd="true" crlf="true"></recv>
+
+  <send>
+    <![CDATA[
+
+      ACK sip:[field3]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[field0]@[field1]:[local_port]>;tag=[call_number]
+      To: <sip:[field3]@[remote_ip]:[remote_port]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 1 ACK
+      Contact: sip:[field0]@[field1]:[local_port]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <nop>
+    <action>
+      <exec play_pcap_audio="/home/sipp/Downloads/sipp-3.3.990/pcap/g729.pcap"/>
+    </action>
+  </nop>
+
+  <pause milliseconds="60000"/>
+
+  <nop>
+    <action>
+      <exec play_pcap_audio="/home/sipp/Downloads/sipp-3.3.990/pcap/dtmf_2833_1.pcap"/>
+    </action>
+  </nop>
+
+  <pause milliseconds="1000"/>
+
+  <send retrans="500">
+    <![CDATA[
+
+      BYE sip:[field3]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[field0]@[field1]:[local_port]>;tag=[call_number]
+      To: <sip:[field3]@[remote_ip]:[remote_port]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 2 BYE
+      Contact: sip:[field0]@[field1]:[local_port]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <recv response="200" crlf="true"></recv>
+
+  <ResponseTimeRepartition value="10, 20, 30, 40, 50, 100, 150, 200"/>
+  <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
+
+</scenario>
+
