@@ -47,6 +47,7 @@ Depois do nome da imagem os comandos são referentes ao SIPp
 - -m VALOR : Interrompa o teste e saia quando as todas as 'chamadas' forem processadas
 - -l VALOR : Defina o número máximo de chamadas simultâneas. Uma vez atingido este limite, o tráfego é reduzido até que o número de chamadas abertas diminua. Padrão: (3 * call_duration (s) * taxa).
 - -r VALOR : Defina a quantidade de "chamadas" por segundos
+- -rp to specify the "rate period" in milliseconds for the call rate (default is 1000ms/1sec). This allows you to have n calls every m milliseconds (by using -r n -rp m).
 - -nd : Sem padrão. Desative todos os comportamentos padrão do SIPp, que são os seguintes:
                       - No tempo limite de retransmissão UDP, aborte a chamada enviando um BYE ou um CANCEL
                       - No tempo limite de recebimento sem atributo ontimeout, interrompa a chamada enviando um BYE ou um cancelamento

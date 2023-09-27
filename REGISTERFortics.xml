@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-2" ?>
+
+<!-- 
+  @jgilsonsi
+
+  Use gen_register_csv.sh to generate register.csv.
+
+  Line command: sipp -sf register.xml -inf register.csv -m 1000000 -l 100 -r 10 -nd -fd 1 -i 192.168.9.199 192.168.9.206:5060
+-->
+
+<scenario name="register_client">
+  
+  <send retrans="1500">
+    <![CDATA[
+    
+      REGISTER sip:[field1] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[field0]@[field1]:[local_port]>;tag=[call_number]
+      To: <sip:[field0]@[field1]:[remote_port]>
+      Call-ID: [call_id + 100]
+      CSeq: [cseq] REGISTER
+      Contact: <sip:[field0]@[local_ip]:[local_port]>
+      Max-Forwards: 10
+      Expires: 3600
+      User-Agent: SIPp/RegisterClient
+      Allow: INVITE, ACK, OPTIONS, BYE, CANCEL, REFER, NOTIFY, INFO, PRACK, UPDATE, MESSAGE
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <recv response="100" optional="true"></recv>
+  <recv response="401" auth="true"></recv>
+  
+  <send retrans="1500">
+    <![CDATA[
+
+      REGISTER sip:[field1] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[field0]@[field1]:[local_port]>;tag=[call_number]
+      To: <sip:[field0]@[field1]:[remote_port]>
+      Call-ID: 09082023///[call_id]
+      CSeq: [cseq] REGISTER
+      Contact: <sip:[field0]@[local_ip]:[local_port]>
+      [field3]
+      Max-Forwards: 10
+      Expires: 3600
+      User-Agent: SIPp/RegisterClient
+      Allow: INVITE, ACK, OPTIONS, BYE, CANCEL, REFER, NOTIFY, INFO, PRACK, UPDATE, MESSAGE
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <recv response="100" optional="true"></recv>
+  <recv response="200"></recv>
+
+  <ResponseTimeRepartition value="10, 20, 30, 40, 50, 100, 150, 200"/>
+
+  <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
+
+</scenario>
