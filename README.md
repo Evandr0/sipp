@@ -7,7 +7,7 @@ Especificação:
 Utilizado google GCP + Maquina Ubuntu 20.04
 
 Instalaçao do ambiente
-## Instalação do docker e outrs libs
+## Instalação do docker e outras libs
 - sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 - sudo apt-get install build-essential libncurses5-dev libopenssl-dev libpcap-dev libnet1.1-dev lksctp-tools libgsl-dev
 - sudo apt install build-essential
@@ -64,3 +64,5 @@ Depois do nome da imagem os comandos são referentes ao SIPp
 - Teste basico onde o ramal 2000 liga para o 2031. É necessário ação humana para atender a chamada no ramal 2031
 Baixar o arquivo g711a.pcap para a pasta /root/sipp-docker/scenarios
 docker run --name sipp_call --rm -d -v /root/sipp-docker/scenarios:/sipp ctaloi/sipp 10.158.0.4:5060 -sf CALL2.xml -inf CALL.csv -m 1 -l 2 -r 2 -nd
+
+o ideal é ligar para um destino com atendimento automatico neste caso.
