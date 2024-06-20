@@ -30,10 +30,12 @@ Instalaçao do ambiente
 
 ## Execurando o comando para REGISTRAR os ramais
 - docker run --name sipp_register --rm -d -v /root/sipp-docker/scenarios:/sipp ctaloi/sipp -sf REGISTER.xml -inf REGISTER.csv -m 31 -l 1 -r 10 -nd 10.158.0.4:5060
+- docker run --network host --rm -it -v /root/sipp-docker/scenarios:/sipp ctaloi/sipp sip-voice-beta.sz.chat:5060 -sf callforticsnovo.xml -inf callfortics.csv  -l 1 -r 1 -m 1
 
 Entendendo o comando acima
 
 - docker run : executar container
+-  --network host : executa o container com o IP do host/maquina
 - --name NOME : Nome que dará ao container
 - --rm : Automaticamente remove o container após finalização
 - -d : Execução do container em background
